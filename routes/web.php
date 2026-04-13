@@ -59,11 +59,27 @@ Route::get('/jemaat/template', [JemaatController::class, 'downloadTemplate']);
 
 
 // ==========================================
-// --- Rute Keuangan / Transaksi Kas ---
+// MODUL KEUANGAN (KAS RUTIN & CADANGAN)
 // ==========================================
-Route::get('/keuangan', [KeuanganController::class, 'index']);
-Route::post('/keuangan/store', [KeuanganController::class, 'store']);
-Route::get('/keuangan/cetak', [KeuanganController::class, 'cetakLaporan']);
+Route::prefix('keuangan')->group(function () {
+    // 1. Dashboard Keuangan
+    Route::get('/', [App\Http\Controllers\KeuanganController::class, 'index'])->name('keuangan.index');
+
+    // 2. Manajemen Kategori & Anggaran (RAB/RAP)
+    Route::get('/kategori', [App\Http\Controllers\KeuanganController::class, 'kategoriIndex'])->name('keuangan.kategori');
+    Route::post('/kategori/store', [App\Http\Controllers\KeuanganController::class, 'kategoriStore']);
+    Route::put('/kategori/update/{id}', [App\Http\Controllers\KeuanganController::class, 'kategoriUpdate']);
+    Route::delete('/kategori/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'kategoriDestroy']);
+
+    // 3. Buku Kas Harian (Transaksi)
+    Route::get('/buku-kas', [App\Http\Controllers\KeuanganController::class, 'bukuKasIndex'])->name('keuangan.buku-kas');
+    Route::post('/transaksi/store', [App\Http\Controllers\KeuanganController::class, 'transaksiStore']);
+    Route::put('/transaksi/update/{id}', [App\Http\Controllers\KeuanganController::class, 'transaksiUpdate']);
+    Route::delete('/transaksi/delete/{id}', [App\Http\Controllers\KeuanganController::class, 'transaksiDestroy']);
+
+    // 4. Laporan
+    Route::get('/laporan', [App\Http\Controllers\KeuanganController::class, 'laporanIndex'])->name('keuangan.laporan');
+});
 
 
 // ==========================================
@@ -99,3 +115,11 @@ Route::get('/warta/download/{id}', [WartaController::class, 'downloadPdf']);
 
 // Rute khusus Layar Publik Warta
 Route::get('/warta/publik', [WartaController::class, 'layarPublik']);
+
+Route::get('/keuangan/laporan/pdf', [KeuanganController::class, 'exportPdf'])->name('keuangan.laporan.pdf');
+
+// Rute untuk menampilkan halaman laporan web
+Route::get('/keuangan/laporan', [\App\Http\Controllers\KeuanganController::class, 'laporanIndex'])->name('keuangan.laporan');
+
+// Rute BARU untuk mencetak PDF DomPDF
+Route::get('/keuangan/laporan/pdf', [\App\Http\Controllers\KeuanganController::class, 'exportPdf'])->name('keuangan.laporan.pdf');

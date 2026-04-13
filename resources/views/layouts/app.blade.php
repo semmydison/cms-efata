@@ -33,6 +33,7 @@
         .sepia-mode .bg-card { background-color: #f3e5ab; border-color: #d4c48a; }
         .sepia-mode aside { background-color: #5f4b32; }
     </style>
+    @livewireStyles
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex h-screen overflow-hidden">
 
@@ -195,5 +196,6 @@
     </script>
     
     @stack('scripts')
+    @livewireScripts
 </body>
 </html>
